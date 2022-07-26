@@ -1,6 +1,0 @@
-E<> (template0.l1 && !template1.l2 && !template2.l2 && !template3.l2 && !template4.l2 && !template5.l2)
-E<> (template1.l1 && !template0.l2 && !template2.l2 && !template3.l2 && !template4.l2 && !template5.l2)
-E<> (template2.l1 && !template0.l2 && !template1.l2 && !template3.l2 && !template4.l2 && !template5.l2)
-E<> (template3.l1 && !template0.l2 && !template1.l2 && !template2.l2 && !template4.l2 && !template5.l2)
-E<> (template4.l1 && !template0.l2 && !template1.l2 && !template2.l2 && !template3.l2 && !template5.l2)
-E<> (template5.l1 && !template0.l2 && !template1.l2 && !template2.l2 && !template3.l2 && !template4.l2)
