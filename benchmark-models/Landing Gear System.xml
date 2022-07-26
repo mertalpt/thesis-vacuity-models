@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+clock door_clocks[3];
+chan init_door_open[3];
+chan init_door_close[3];
+chan door_opened[3];
+chan door_closed[3];
+clock gear_clocks[3];
+chan init_gear_high[3];
+chan init_gear_down[3];
+chan gear_extended[3];
+chan gear_shock_absorber[3];
+chan gear_retracted[3];</declaration>
+	<template>
+		<name>DoorCylinder</name>
+		<parameter>const int[0,2] position</parameter>
+		<location id="id0" x="-204" y="-59">
+			<name x="-212" y="-93">locked_down</name>
+		</location>
+		<location id="id1" x="119" y="-314">
+			<name x="111" y="-348">moving_down</name>
+		</location>
+		<location id="id2" x="136" y="145">
+			<name x="128" y="111">moving_high</name>
+		</location>
+		<location id="id3" x="519" y="-68">
+			<name x="510" y="-102">locked_high</name>
+		</location>
+		<location id="id4" x="-110" y="102">
+			<name x="-119" y="68">unlocking_down</name>
+		</location>
+		<location id="id5" x="391" y="111">
+			<name x="383" y="77">locking_high</name>
+		</location>
+		<location id="id6" x="408" y="-263">
+			<name x="400" y="-297">unlocking_high</name>
+		</location>
+		<location id="id7" x="-110" y="-272">
+			<name x="-119" y="-306">locking_down</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id5"/>
+			<label kind="guard" x="43" y="34">position != 0 &amp;&amp; door_clocks[position] &gt;= 1.6</label>
+			<label kind="assignment" x="43" y="51">door_clocks[position] = 0</label>
+			<nail x="238" y="60"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-85" y="-255">position != 0 &amp;&amp; door_clocks[position] &gt;= 1.5</label>
+			<nail x="34" y="-255"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="544" y="-68">door_opened[position]!</label>
+			<nail x="561" y="-127"/>
+			<nail x="621" y="-76"/>
+			<nail x="570" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-391" y="-68">door_closed[position]!</label>
+			<nail x="-238" y="0"/>
+			<nail x="-289" y="-51"/>
+			<nail x="-246" y="-110"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id0"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-212" y="-374">position == 0 &amp;&amp; door_clocks[position] &gt;= 1.2</label>
+			<nail x="-17" y="-340"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id1"/>
+			<label kind="guard" x="213" y="-331">door_clocks[position] &gt;= 0.4</label>
+			<label kind="assignment" x="213" y="-314">door_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="408" y="-187">init_door_close[position]?</label>
+			<label kind="assignment" x="408" y="-170">door_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id3"/>
+			<label kind="guard" x="357" y="9">door_clocks[position] &gt;= 0.3</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id5"/>
+			<label kind="guard" x="238" y="187">position == 0 &amp;&amp; door_clocks[position] &gt;= 1.2</label>
+			<label kind="assignment" x="238" y="204">door_clocks[position] = 0</label>
+			<nail x="281" y="170"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-85" y="145">door_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-187" y="0">init_door_open[position]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>GearCylinder</name>
+		<parameter>const int[0,2] position</parameter>
+		<location id="id8" x="-1071" y="-161">
+			<name x="-1079" y="-195">locked_down</name>
+		</location>
+		<location id="id9" x="-960" y="60">
+			<name x="-969" y="26">unlocking_down</name>
+		</location>
+		<location id="id10" x="-391" y="-153">
+			<name x="-399" y="-187">locked_high</name>
+		</location>
+		<location id="id11" x="-739" y="119">
+			<name x="-748" y="85">moving_high</name>
+		</location>
+		<location id="id12" x="-501" y="68">
+			<name x="-510" y="34">locking_high</name>
+		</location>
+		<location id="id13" x="-535" y="-323">
+			<name x="-544" y="-357">unlocking_high</name>
+		</location>
+		<location id="id14" x="-765" y="-391">
+			<name x="-773" y="-425">moving_down</name>
+		</location>
+		<location id="id15" x="-960" y="-306">
+			<name x="-969" y="-340">locking_down</name>
+		</location>
+		<init ref="id8"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-1300" y="-187">gear_extended[position]!</label>
+			<nail x="-1096" y="-119"/>
+			<nail x="-1139" y="-161"/>
+			<nail x="-1105" y="-212"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-336" y="-204">gear_retracted[position]!</label>
+			<nail x="-306" y="-221"/>
+			<nail x="-272" y="-153"/>
+			<nail x="-315" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-1054" y="-263">gear_clocks[position] &gt;= 0.4</label>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-977" y="-476">position == 0 &amp;&amp; gear_clocks[position] &gt;= 1.2</label>
+			<label kind="assignment" x="-977" y="-459">gear_clocks[position] = 0</label>
+			<nail x="-901" y="-442"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-901" y="-297">position != 0 &amp;&amp; gear_clocks[position] &gt;= 1.6</label>
+			<label kind="assignment" x="-901" y="-280">gear_clocks[position] = 0</label>
+			<nail x="-807" y="-297"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="guard" x="-722" y="-391">gear_clocks[position] &gt;= 0.8</label>
+			<label kind="assignment" x="-722" y="-374">gear_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-517" y="-255">init_gear_down[position]?</label>
+			<label kind="assignment" x="-518" y="-238">gear_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-484" y="-76">gear_clocks[position] &gt;= 0.4</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="guard" x="-773" y="-17">position == 0 &amp;&amp; gear_clocks[position] &gt;= 1.6</label>
+			<label kind="assignment" x="-773" y="0">gear_clocks[position] = 0</label>
+			<nail x="-654" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="guard" x="-654" y="128">position != 0 &amp;&amp; gear_clocks[position] &gt;= 2</label>
+			<label kind="assignment" x="-654" y="145">gear_clocks[position] = 0</label>
+			<nail x="-586" y="136"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-943" y="77">gear_clocks[position] &gt;= 0.8</label>
+			<label kind="assignment" x="-943" y="94">gear_clocks[position] = 0</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-1053" y="-67">init_gear_high[position]?</label>
+			<label kind="assignment" x="-1054" y="-51">gear_clocks[position] = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LandingGearSystem</name>
+		<parameter>const int[0,2] position</parameter>
+		<location id="id16" x="-1045" y="-136">
+			<name x="-1054" y="-170">extended</name>
+		</location>
+		<location id="id17" x="-935" y="94">
+			<name x="-952" y="60">door_opening_1</name>
+		</location>
+		<location id="id18" x="-680" y="187">
+			<name x="-688" y="153">door_open_1</name>
+		</location>
+		<location id="id19" x="-391" y="213">
+			<name x="-399" y="179">gear_moving_high</name>
+		</location>
+		<location id="id20" x="-102" y="179">
+			<name x="-110" y="145">gear_locked_high</name>
+		</location>
+		<location id="id21" x="51" y="26">
+			<name x="43" y="-8">door_closing_1</name>
+		</location>
+		<location id="id22" x="179" y="-170">
+			<name x="170" y="-204">retracted</name>
+		</location>
+		<location id="id23" x="-34" y="-365">
+			<name x="-42" y="-399">door_opening_2</name>
+		</location>
+		<location id="id24" x="-297" y="-442">
+			<name x="-306" y="-476">door_open_2</name>
+		</location>
+		<location id="id25" x="-552" y="-442">
+			<name x="-561" y="-476">gear_moving_down</name>
+		</location>
+		<location id="id26" x="-790" y="-408">
+			<name x="-799" y="-442">gear_locked_down</name>
+		</location>
+		<location id="id27" x="-994" y="-306">
+			<name x="-1003" y="-340">door_closing_2</name>
+		</location>
+		<init ref="id16"/>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-1020" y="-238">door_closed[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-977" y="-374">init_door_open[position]!</label>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-748" y="-416">gear_extended[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id25"/>
+			<label kind="synchronisation" x="-535" y="-459">init_gear_down[position]!</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="synchronisation" x="-280" y="-416">door_opened[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="-17" y="-280">init_door_open[position]!</label>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="68" y="-85">door_closed[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="-85" y="85">init_door_close[position]!</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="synchronisation" x="-340" y="204">gear_retracted[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-637" y="213">init_gear_high[position]!</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="-918" y="119">door_opened[position]?</label>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-1028" y="-34">init_door_open[position]!</label>
+		</transition>
+	</template>
+	<system>// Paper: Landing gear system [Frédéric Boniol and Virginie Wiels]
+// Place template instantiations here.
+FrontDoorCylinder = DoorCylinder(0);
+LeftDoorCylinder = DoorCylinder(1);
+RightDoorCylinder = DoorCylinder(2);
+FrontGearCylinder = GearCylinder(0);
+LeftGearCylinder = GearCylinder(1);
+RightGearCylinder = GearCylinder(2);
+FrontLGS = LandingGearSystem(0);
+LeftLGS = LandingGearSystem(1);
+RightLGS = LandingGearSystem(2);
+// List one or more processes to be composed into a system.
+system FrontDoorCylinder, LeftDoorCylinder, RightDoorCylinder, FrontGearCylinder, LeftGearCylinder, RightGearCylinder, FrontLGS, LeftLGS, RightLGS;
+    </system>
+	<queries>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
