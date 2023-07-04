@@ -1,2 +1,2 @@
-E<> P1.state3
-E<> P2.state3
+T1: E<> P1.state3
+T2: E<> P2.state3

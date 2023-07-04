@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+const int num_signals = 4;
+int turn[num_signals];
+clock t[num_signals];
+broadcast chan turned_green;</declaration>
+	<template>
+		<name x="9" y="9">TrafficLights</name>
+		<parameter>int position</parameter>
+		<declaration>// Place local declarations here.</declaration>
+		<location id="id0" x="-442" y="-34">
+			<name x="-450" y="-68">red</name>
+			<label kind="invariant" x="-476" y="-17">t[position]&lt;=115</label>
+		</location>
+		<location id="id1" x="-170" y="-34">
+			<name x="-187" y="-68">yellow</name>
+			<label kind="invariant" x="-238" y="-17">t[position]&lt;=5</label>
+		</location>
+		<location id="id2" x="102" y="-34">
+			<name x="68" y="-68">green</name>
+		</location>
+		<location id="id3" x="-170" y="170">
+			<name x="-187" y="136">cycle</name>
+			<label kind="invariant" x="-221" y="187">t[position]&lt;=0</label>
+		</location>
+		<location id="id4" x="170" y="170">
+			<name x="170" y="136">conflict</name>
+		</location>
+		<location id="id5" x="-442" y="-272">
+			<name x="-452" y="-306">start</name>
+			<label kind="invariant" x="-452" y="-255">t[position]&lt;=0</label>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="-442" y="-187">turn[position]=position</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-680" y="-119">turn[position]!=0</label>
+			<label kind="synchronisation" x="-680" y="-102">turned_green?</label>
+			<label kind="assignment" x="-680" y="-85">turn[position]=turn[position]-1</label>
+			<nail x="-544" y="-34"/>
+			<nail x="-544" y="-136"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id0"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-51" y="85">t[position]&gt;40</label>
+			<label kind="assignment" x="-51" y="102">t[position]=0, turn[position]=num_signals-1</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="153" y="68">turned_green?</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-85" y="-102">t[position]&gt;0</label>
+			<label kind="synchronisation" x="-85" y="-85">turned_green!</label>
+			<label kind="assignment" x="-85" y="-68">t[position]=0</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-408" y="-85">turn[position]==0 &amp;&amp; t[position]&gt;0</label>
+			<label kind="assignment" x="-408" y="-68">t[position]=0</label>
+		</transition>
+	</template>
+	<system>/*
+    System Requirements:
+- There are four traffic lights.
+- Each light cycles as R-&gt;Y-&gt;G-&gt;R.
+- Lights turn green in order, i.e. no light turns green again before other lights turned green once.
+- Lights stay in reds and green in a non-zero amount of time.
+- Lights stay green at least 40 seconds.
+- No two lights can be green at the same time.
+- No light can go without turning green more than 120 seconds.
+*/
+
+// Place template instantiations here.
+Lights1 = TrafficLights(0);
+Lights2 = TrafficLights(1);
+Lights3 = TrafficLights(2);
+Lights4 = TrafficLights(3);
+
+// List one or more processes to be composed into a system.
+system Lights1, Lights2, Lights3, Lights4;</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; Lights1.cycle</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Lights2.cycle</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Lights3.cycle</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Lights4.cycle</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Lights1.cycle &amp;&amp; !Lights2.conflict &amp;&amp; !Lights3.conflict &amp;&amp; !Lights4.conflict)</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Lights2.cycle &amp;&amp; !Lights1.conflict &amp;&amp; !Lights3.conflict &amp;&amp; !Lights4.conflict)</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Lights3.cycle &amp;&amp; !Lights2.conflict &amp;&amp; !Lights1.conflict &amp;&amp; !Lights4.conflict)</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Lights4.cycle &amp;&amp; !Lights2.conflict &amp;&amp; !Lights3.conflict &amp;&amp; !Lights1.conflict)</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
